@@ -1,0 +1,24 @@
+.top-area{
+    width: 100%;
+    height: 90px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.inp_area{
+    width: 230px;
+    margin: 5px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.inp{
+    width: 170px;
+    height: 30px;
+    line-height: 30px;
+}
+.find_btn{
+    width: 45px;
+    height: 30px;
+}

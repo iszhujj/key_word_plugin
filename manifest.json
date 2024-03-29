@@ -1,0 +1,28 @@
+{
+    "manifest_version": 2,
+    "name": "key_word_plugin",
+    "version": "1.0",
+  
+    "description": "find_key_word",
+    "permissions":[
+        "*://*/*",
+        "activeTab"
+    ],
+    "icons": {
+      "48": "icons/flower.jpg"
+    },
+  
+    "content_scripts": [
+        {
+            "matches": ["*://*/*"],
+            "js": ["index.js"],
+            "run_at":"document_idle"
+        }
+    ],
+    "sidebar_action": {
+        "default_title": "My tool",
+        "default_panel": "./sidebar/sidebar.html",
+        "default_icon": "./sidebar/sidebar_icon.png"
+    }
+}
+  
