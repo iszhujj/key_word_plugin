@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        function create(transformers) {
+            return function (template, ...args) {
+                let idx = 0;
+                let state = 'UNDEFINED';
+
+                return template.replace(
+                    /([{}])\1|[{](.*?)(?:!(.+?))?[}]/g,
+                    function (match, literal, key, xf) {
+                        console.log(match, literal, key, xf)
+                        if (literal != null) {
+                            return literal;
+                        }
+                        if (key.length > 0) {
+                            if (state === 'IMPLICIT') {
+                                throw ValueError('cannot switch from implicit to explicit numbering');
+                            }
+                            state = 'EXPLICIT';
+                        } else {
+                            if (state === 'EXPLICIT') {
+                                throw ValueError('cannot switch from explicit to implicit numbering');
+                            }
+                            state = 'IMPLICIT';
+                            key = String(idx);
+                            idx += 1;
+                        }
+
+                        // 补全代码: 根据占位符的 key 和 args 数组中的值，获取相应的 value
+                        // 提示：使用 key 和 args 数组来获取正确的 value
+                        
+
+                        if (xf == null) {
+                            // 补全代码: 如果没有转换器 xf，返回获取到的 value
+                            let arr = key.split('.')
+                            let index = arr[0]
+                            if(`${parseInt(index)}`.length !== `${index}`.length){
+                                return key
+                            }
+                            let res = args[parseInt(index)];
+                            console.log(res)
+                            for(let i =  1; i < arr.length ; i ++){
+                                res = res[arr[i]]
+                            }
+                            return res;
+                        } else if (transformers.hasOwnProperty(xf)) {
+                            // 补全代码: 如果存在名为 xf 的转换器，将其应用于 value，并返回转换后的结果
+                            // 提示：使用 transformers 对象来查找和应用转换器
+                            let [index, transformerName] = key.split('!');
+                            return transformers[xf](args[parseInt(index)])
+
+                        } else {
+                            throw ValueError(`no transformer named "${xf}"`);
+                        }
+                    }
+                );
+            };
+        }
+        function ValueError(message) {
+            var err = new Error(message);
+            err.name = 'ValueError';
+            return err;
+        }
+        const user = {info:{name:'zhangsan',gender:'nam'}, age:15, address:'none'}
+        const format = create({
+            upperr:(val)=>{
+                return val.toUpperCase()
+            }
+        })
+        const result = format("Hello {0.address} {0.info.gender}, {0.age}, {1!upperr}", user, 'abcde')
+        // const result = format("Hello {}", "123")
+        console.log(result)
+    </script>
+</body>
+
+</html>

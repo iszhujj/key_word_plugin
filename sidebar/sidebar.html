@@ -4,31 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        :root,body{
+            padding: 0;
+            margin: 0;
+            min-width: 250px;
+            position: relative;
+        }
         .container{
             border: 3px solid pink;
             width: 100%;
             height: 100vh;
             box-sizing: border-box;
         }
+        input{
+            outline: none;
+            border-radius: 10px;
+            padding: 4px 8px;
+            line-height: 20px;
+            border: 2px solid #555;
+        }
+        button{
+            text-align: center;
+        }
     </style>
     <link rel="stylesheet" href="./top_area.css">
 </head>
 <body>
     <div class="container">
+        <!-- 关键词查找 -->
         <div class="top-area">
-            <section class="inp_area">
+            <section class="inp-area">
                 <input class="inp" type="text" maxlength="10">
-                <button class="find_btn">find</button>
+                <button class="find-btn">查找</button>
             </section>
-            <section class="result_area">
-    
+            <section class="result-area">
+                <p>共找到</p>
+                <!-- 将查找到的结果条目数量写入此处 -->
+                <p class="count"></p>
+                <p>处;</p>
             </section>
-            <section>
-                <button>last</button>
-                <button>next</button>
-                <button class="clear">clear</button>
+            <section class="btn-area">
+                <input type="number" step="1" min="1" class="goto-keyword-inp usable">
+                <button class="usable goto-btn">跳转</button>
+            </section>
+            <section class="btn-area">
+                <button class="usable last-btn">上一个</button>
+                <button class="usable next-btn">下一个</button>
+                <button class="clear">清除所有标记</button>
             </section>
         </div>
+
     </div>
 </body>
 <script src="keyword.js"></script>

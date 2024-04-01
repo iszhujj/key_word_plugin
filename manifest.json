@@ -23,6 +23,11 @@
         "default_title": "My tool",
         "default_panel": "./sidebar/sidebar.html",
         "default_icon": "./sidebar/sidebar_icon.png"
+    },
+    "background": {
+        "scripts": ["bg.js"],
+        "persistent": false,
+        "type": "module"
     }
 }
   
