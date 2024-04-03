@@ -53,27 +53,35 @@ find_btn.addEventListener('click', (e)=>{
         // 然后往当前页面中注入内容脚本，document将是当前页面的 document
         browser.tabs.executeScript({
             code:`
-(function action(keyword, nodes=document.body){
-    let temp_nodes = Array.from(nodes.childNodes).filter((e)=>{
-        return (
-            e.textContent.includes(keyword) &&
-            e.tagName !== 'META' &&
-            e.tagName !== 'LINK' &&
-            e.tagName !== 'SCRIPT' && 
-            e.tagName !== 'TITLE'
-        )
-    })
-    for(let node of temp_nodes){
-        let type = node.nodeType
-        if((type === 1 && node.textContent.includes(keyword)) && (node.tagName !== 'STRONG' || !node.className.includes('__keyword_word__'))){
-            action(keyword, node);
-        }else if(type === 3 && node.textContent.includes(keyword)){
-            node.parentNode.innerHTML = 
-                node.parentNode.innerHTML
-                .replaceAll(keyword, "<strong style='${__style}' class='__keyword_word__'>" + keyword + "</strong>");
+(function action(keyword, nodes){
+    Array.from(nodes).forEach(node =>{
+        let {nodeType, textContent : content} = node;
+        if(nodeType === 3 && content.includes(keyword)){
+            let parentNode = node.parentNode;
+			let split_arr = content.trim().replaceAll(keyword,'-' + keyword + '-').split('-').filter(e => e);
+            for(let item of split_arr){
+                if(item === keyword){
+                    let strong = document.createElement('strong')
+                    strong.innerText = keyword;
+                    strong.classList.add('${KEYWORD_CLASS_NAME}')
+                    strong.style = '${__style}'
+                    parentNode.insertBefore(strong, node)
+                }else{
+                    let text = document.createTextNode(item);
+                    parentNode.insertBefore(text, node)
+                }
+            }
+            parentNode.removeChild(node)
+        }else if(nodeType === 1 && content.includes(keyword)){
+            action(keyword, node.childNodes)
         }
-    }
-})('${keyword}')
+    })
+})('${keyword}', Array.from(document.body.childNodes).filter((e)=>{
+    return (
+        e.textContent.includes('${keyword}') &&
+        e.tagName !== 'SCRIPT'
+    )
+}))
 document.querySelectorAll('.__keyword_word__').length
             `
         }).then((onExecuted, onError)=>{
@@ -96,17 +104,12 @@ const clear_action = (keyword, clear_inp=true, clear_keyword_session=true, clear
     browser.tabs.query({active: true, currentWindow: true}).then(()=>{
         browser.tabs.executeScript({
             code:`
-(function action(keyword, nodes=document.body){
-    for(let node of Array.from(nodes.childNodes).filter(e=> parseInt(e.nodeType) === 1)){
-        let type = node.nodeType
-        if(node.textContent.includes(keyword) && (node.tagName !== 'STRONG' || !node.className.includes('__keyword_word__'))){
-            action(keyword, node);
-        }else if(node.textContent === keyword && node.tagName === 'STRONG' && node.className.includes('__keyword_word__')){
-            let parent = node.parentNode;
-            let textNode = document.createTextNode(keyword)
-            parent.replaceChild(textNode, node)
-        }
-    }
+(function action(keyword){
+    document.querySelectorAll('.${KEYWORD_CLASS_NAME}').forEach(e =>{
+        let parent = e.parentNode;
+        let textNode = document.createTextNode(keyword);
+        parent.replaceChild(textNode, e)
+    })
 })('${keyword}')
             `
         })

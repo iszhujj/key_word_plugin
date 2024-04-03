@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="my_name">
+        <img src="https://tse1-mm.cn.bing.net/th/id/OIP-C.duz6S7Fvygrqd6Yj_DcXAQHaF7?rs=1&pid=ImgDetMain" alt="我的图片">
+        <p>我的图片</p>
+        <div>
+            你的图片
+            <p>我们的图片</p>
+            <span>都是</span>
+            图片
+        </div>
+    </div>
+    <script>
+        document.body.innerHTML = document.body.innerHTML.replaceAll('图片','<strong style="color:red">图片</strong>')
+    </script>
+</body>
+</html>
